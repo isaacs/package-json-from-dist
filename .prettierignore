@@ -1,0 +1,15 @@
+/LICENSE.md
+/node_modules
+/example
+/.github
+/dist
+.env
+/.tshy
+/docs
+/.tap
+/tap-snapshots
+/.nyc_output
+/coverage
+/benchmark
+/scripts/fixture
+/test/fixture

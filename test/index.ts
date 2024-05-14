@@ -27,20 +27,20 @@ t.test('not in dist', t => {
 
 t.test('from dist, not in node_modules', t => {
   const dir = t.testdir({
+    foo: {
+      'package.json': JSON.stringify({
+        name: 'foo',
+        version: '1.2.3',
+      }),
+    },
+    '@scoped': {
       foo: {
         'package.json': JSON.stringify({
-          name: 'foo',
-          version: '1.2.3',
+          name: '@scoped/foo',
+          version: '3.2.1',
         }),
       },
-      '@scoped': {
-        foo: {
-          'package.json': JSON.stringify({
-            name: '@scoped/foo',
-            version: '3.2.1',
-          }),
-        },
-      },
+    },
   })
   t.test('unscoped', t => {
     const p = resolve(dir, 'foo/dist/a/b/x.js')
