@@ -1,6 +1,6 @@
 {
   "name": "package-json-from-dist",
-  "version": "0.0.0-0",
+  "version": "1.0.0",
   "description": "Load the local package.json from either src or dist folder",
   "main": "./dist/commonjs/index.js",
   "exports": {
