@@ -107,8 +107,19 @@ t.test('from dist, in node_modules', t => {
           }),
         },
       },
+      '.store': {
+        'some-yarn-junk': {
+          package: {
+            'package.json': JSON.stringify({
+              name: 'some-yarn-junk',
+              version: '9.9.9001',
+            }),
+          },
+        },
+      },
     },
   })
+
   t.test('unscoped', t => {
     const p = resolve(dir, 'node_modules/foo/dist/a/b/x.js')
     const u = pathToFileURL(p)
@@ -131,6 +142,7 @@ t.test('from dist, in node_modules', t => {
     })
     t.end()
   })
+
   t.test('scoped', t => {
     const p = resolve(dir, 'node_modules/@scoped/foo/dist/a/b/x.js')
     const u = pathToFileURL(p)
@@ -150,6 +162,32 @@ t.test('from dist, in node_modules', t => {
     t.strictSame(loadPackageJson(u, '../../../package.json'), {
       name: '@scoped/foo',
       version: '3.2.1',
+    })
+    t.end()
+  })
+
+  t.test('knitting related', t => {
+    const p = resolve(
+      dir,
+      'node_modules/.store/some-yarn-junk/package/dist/a/b/x.js',
+    )
+    const u = pathToFileURL(p)
+    t.strictSame(loadPackageJson(p), {
+      name: 'some-yarn-junk',
+      version: '9.9.9001',
+    })
+    t.strictSame(loadPackageJson(u), {
+      name: 'some-yarn-junk',
+      version: '9.9.9001',
+    })
+    // pathFromSrc doesn't matter, we're in node_modules
+    t.strictSame(loadPackageJson(p, '../../../package.json'), {
+      name: 'some-yarn-junk',
+      version: '9.9.9001',
+    })
+    t.strictSame(loadPackageJson(u, '../../../package.json'), {
+      name: 'some-yarn-junk',
+      version: '9.9.9001',
     })
     t.end()
   })

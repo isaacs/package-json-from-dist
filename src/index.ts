@@ -3,6 +3,8 @@ import { dirname, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const NM = `${sep}node_modules${sep}`
+const STORE = `.store${sep}`
+const PKG = `${sep}package${sep}`
 const DIST = `${sep}dist${sep}`
 
 /**
@@ -63,9 +65,21 @@ export const findPackageJson = (
     // inside of node_modules. find the dist directly under package name.
     const nm = __dirname.substring(0, nms + NM.length)
     const pkgDir = __dirname.substring(nms + NM.length)
+    // affordance for yarn berry, which puts package contents in
+    // '.../node_modules/.store/${id}-${hash}/package/...'
+    if (pkgDir.startsWith(STORE)) {
+      const pkg = pkgDir.indexOf(PKG, STORE.length)
+      if (pkg) {
+        return resolve(
+          nm,
+          pkgDir.substring(0, pkg + PKG.length),
+          'package.json',
+        )
+      }
+    }
     const pkgName =
       pkgDir.startsWith('@') ?
-        pkgDir.split(sep).slice(0, 2).join(sep)
+        pkgDir.split(sep, 2).join(sep)
       : String(pkgDir.split(sep)[0])
     return resolve(nm, pkgName, 'package.json')
   } else {
